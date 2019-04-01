@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "terraform-up-and-running-state-kenny"
-    key = "global/s3/terraform.tfstate"
+    key = "global/s3/system/terraform.tfstate"
     region = "ca-central-1"
     encrypt = true
   }
