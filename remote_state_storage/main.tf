@@ -1,10 +1,5 @@
 terraform {
-  backend "s3" {
-    bucket = "terraform-up-and-running-state-kenny"
-    key = "global/s3/terraform.tfstate"
-    region = "ca-central-1"
-    encrypt = true
-  }
+  backend "s3" {}
 }
 
 provider "aws" {
