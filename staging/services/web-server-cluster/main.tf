@@ -93,17 +93,3 @@ resource "aws_security_group" "instance" {
       create_before_destroy = true
     }
 }
-
-variable "server_port" {
-  description = "The port the server will use for HTTP requests"
-  default = 8080
-}
-
-variable "elb_port" {
-  description = "The port the elastic load balancer will use for HTTP requests"
-  default = 80
-}
-
-output "elb_dns_name" {
-  value = "${aws_elb.example.dns_name}"
-}
