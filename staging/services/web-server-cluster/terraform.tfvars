@@ -6,7 +6,7 @@ terragrunt = {
       key            = "staging/services/web-server-cluster/terraform.tfstate"
       region         = "ca-central-1"
       encrypt        = true
-      dynamodb_table = "my-system-lock-table"
+      dynamodb_table = "my-cluster-lock-table"
     }
   }
 }
