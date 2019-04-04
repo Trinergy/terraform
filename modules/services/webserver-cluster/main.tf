@@ -1,25 +1,17 @@
-terraform {
-  backend "s3" {}
-}
-
-provider "aws" {
-    region = "ca-central-1"
-}
-
 data "aws_availability_zones" "all" {}
 
 data "terraform_remote_state" "db" {
   backend = "s3"
 
   config {
-    bucket = "terraform-up-and-running-state-kenny"
-    key = "staging/data-stores/mysql/terraform.tfstate"
+    bucket = "${var.db_remote_state_bucket}"
+    key = "${var.db_remote_state_key}"
     region = "ca-central-1"
   }
 }
 
 data "template_file" "user_data" {
-  template = "${file("user-data.sh")}"
+  template = "${file("${path.module}/user-data.sh")}"
 
   vars {
     server_port = "${var.server_port}"
@@ -41,7 +33,7 @@ resource "aws_launch_configuration" "example" {
 }
 
 resource "aws_elb" "example" {
-  name = "terraform-asg-example"
+  name = "${var.cluster_name}-elb"
   availability_zones = ["${data.aws_availability_zones.all.names}"]
   security_groups = ["${aws_security_group.elb.id}"]
 
@@ -62,7 +54,7 @@ resource "aws_elb" "example" {
 }
 
 resource "aws_security_group" "elb" {
-  name = "terraform-example-elb"
+  name = "${var.cluster_name}-elb"
 
   ingress {
     from_port = "${var.elb_port}"
@@ -90,13 +82,13 @@ resource "aws_autoscaling_group" "example" {
   max_size = 10
   tag { 
     key = "Name"
-    value = "terraform-asg-example"
+    value = "${var.cluster_name}-autoscaling-group"
     propagate_at_launch = true
   }
 }
 
 resource "aws_security_group" "instance" {
-  name = "terraform-example-instance"
+  name = "${var.cluster_name}-instance"
 
   ingress {
     from_port = "${var.server_port}"
