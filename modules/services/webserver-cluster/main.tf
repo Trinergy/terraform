@@ -45,8 +45,8 @@ resource "aws_elb" "example" {
   }
 
   health_check {
-    healthy_threshold = 2
-    unhealthy_threshold = 2
+    healthy_threshold = "${var.healthy_threshold}"
+    unhealthy_threshold = "${var.unhealthy_threshold}"
     timeout = 3
     interval = 30
     target = "HTTP:${var.server_port}/"
@@ -78,8 +78,8 @@ resource "aws_autoscaling_group" "example" {
   load_balancers = ["${aws_elb.example.name}"]
   health_check_type = "ELB"
 
-  min_size = 2
-  max_size = 10
+  min_size = "${var.auto_scaling_min_size}"
+  max_size = "${var.auto_scaling_max_size}"
   tag { 
     key = "Name"
     value = "${var.cluster_name}-autoscaling-group"
